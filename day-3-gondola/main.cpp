@@ -76,11 +76,9 @@ void findnums(vector<numpos> &linenums, string line) {
 void sumparts(int &sum, vector<numpos> linenums) {
     for (auto part : linenums) {
         if (part.part) {
-//            cout << "NUM: " << part.value << endl;
             sum += part.value;
         }
     }
-    cout << endl;
 }
 
 void slidein(string line, vector<string> &lines) {
@@ -93,7 +91,7 @@ int main() {
     ifstream file("input");
     string line;
     vector<string> lines(3, "");
-    int envloop=0, ln=-1;
+    int ln=-1;
     vector<numpos> linenums;
     int sum = 0;
 
@@ -101,7 +99,6 @@ int main() {
         cout << "Unable to open file" << endl;
 
     while (getline(file, line)) {
-        envloop = envloop%3;
         ln++;
         if (ln < 2) {
             lines[ln] = line;
@@ -110,7 +107,6 @@ int main() {
                 check(0, current, linenums, lines);
                 check(0, bottom, linenums, lines);
             }
-
         } else if (ln >= 2 and ln <= 139) {
             if (ln == 2) {
                 lines[ln] = line;
@@ -122,6 +118,7 @@ int main() {
             check(1, upper, linenums, lines);
             check(1, bottom, linenums, lines);
             if (ln == 139) {
+                sumparts(sum, linenums);
                 linenums.clear();
                 findnums(linenums, lines[2]);
                 check(2, current, linenums, lines);
@@ -129,18 +126,17 @@ int main() {
             }
         }
         sumparts(sum, linenums);
+        cout << "-----===== LINE " << ln << " =====-----" << endl;
+        for (auto part : linenums) {
+            cout << "PART? " << part.part 
+                 << " BEG: " << part.beg 
+                 << " END: " << part.end 
+                 << " NUM: " << part.value << endl;
+        }
         linenums.clear();
-                /*
-                cout << "-----===== LINE " << ln << " =====-----" << endl;
-                for (auto part : linenums) {
-                    cout << "PART? " << part.part 
-                         << " BEG: " << part.beg 
-                         << " END: " << part.end << endl;
-                }*/
-        envloop++;
+        cout << "The sum of the part numbers of the engine is: " << sum << endl;
     }
 
-    cout << "The sum of the part numbers of the engine is: " << sum << endl;
 
     file.close();
 
